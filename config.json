@@ -1,0 +1,12 @@
+{
+  "human": {
+    "tax": "9606",
+    "download": "https://data.fanta.bio/cre/v1.1.0/human/human-CREv1.1.0.hg38.cre-peaks_annotation.jsonl.gz"
+  },
+  "mouse": {
+    "tax": "10090",
+    "download": "https://data.fanta.bio/cre/v1.1.0/mouse/mouse-CREv1.1.0.mm10.cre-peaks_annotation.jsonl.gz"
+  },
+  "sparql_endpoint": "https://rdfportal.org/ncbi/sparql"
+}
+  
