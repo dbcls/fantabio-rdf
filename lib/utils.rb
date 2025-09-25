@@ -8,9 +8,9 @@ module Utils
   # --- Prefix block ---
   def self.prefixes
     <<~TTL
-@prefix fanta:    <https://fanta.bio/cre/> .
-@prefix reftss:   <https://reftss.riken.jp/reftss/TSS:> .
-@prefix fantao:   <https://fanta.bio/ontology/> .
+@prefix fanta:    <http://fanta.bio/cre/> .
+@prefix reftss:   <http://reftss.riken.jp/reftss/TSS:> .
+@prefix fantao:   <http://fanta.bio/ontology/> .
 @prefix dct:      <http://purl.org/dc/terms/> .
 @prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
 @prefix obo:      <http://purl.obolibrary.org/obo/> .
