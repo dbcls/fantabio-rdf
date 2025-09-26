@@ -113,12 +113,11 @@ module Utils
     
     unless ncbi_ids.empty? && hgnc_mgi_ids.empty? && uniprot_ids.empty? &&
            gene_names.empty? && gene_symbols.empty? && gene_synonyms.empty?
-       # EntrezGene: > to NCBI gene ID, HGNC:/MGI: > not mod.
       gene_source_ids = Array(rec["tss_gene_sources"]).to_h do |x|
         if x.start_with?("EntrezGene:")
-          [x.sub(/\AEntrezGene:/, ""), true]
+          [x.sub(/\AEntrezGene:/, ""), true]  # EntrezGene: > to NCBI gene ID
         else
-          [x, true]
+          [x, true]  # HGNC:/MGI: > not mod.
         end
       end
       buf << "  fantao:hasPromoter ["
