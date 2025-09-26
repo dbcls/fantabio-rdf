@@ -16,14 +16,33 @@ when "download:jsonl"
   Downloader.run
 when "download:tsv"
   SparqlClient.run
-when "convert:ttl"
+when "convert:ttl", "convert"
   Converter.run
+
+when "run:all", "all"
+  begin
+    puts "== Step 1/3: download:jsonl =="
+    Downloader.run
+
+    puts "== Step 2/3: download:tsv =="
+    SparqlClient.run
+
+    puts "== Step 3/3: convert:ttl =="
+    Converter.run
+
+    puts "== Done =="
+  rescue => e
+    warn "[run:all] aborted: #{e.class} #{e.message}"
+    exit 1
+  end
+
 else
   puts <<~USAGE
     Usage:
-      bin/convert_fantabio_to_ttl.rb download:jsonl    # config.json の download URL から JSONL を取得
-      bin/convert_fantabio_to_ttl.rb download:tsv      # SPARQL クエリを実行して TSV を取得
-      bin/convert_fantabio_to_ttl.rb convert:ttl       # JSONL + TSV を TTL に変換
+      bin/convert_fantabio_to_ttl.rb download:jsonl    # Download the fanta.bio JSONL by referencing config.json
+      bin/convert_fantabio_to_ttl.rb download:tsv      # Get geneID-symbol_TSV from RDF-portal
+      bin/convert_fantabio_to_ttl.rb convert           # JSONL & TSV to TTL
+      bin/convert_fantabio_to_ttl.rb all               # Download & convert
   USAGE
   exit 1
 end
