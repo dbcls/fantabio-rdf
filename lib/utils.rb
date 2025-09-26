@@ -110,19 +110,35 @@ module Utils
     gene_names    = Array(rec["tss_gene_names"])
     gene_symbols  = Array(rec["tss_gene_symbols"])
     gene_synonyms = Array(rec["tss_gene_synonyms"])
-
+    
     unless ncbi_ids.empty? && hgnc_mgi_ids.empty? && uniprot_ids.empty? &&
            gene_names.empty? && gene_symbols.empty? && gene_synonyms.empty?
+       # EntrezGene: > to NCBI gene ID, HGNC:/MGI: > not mod.
+      gene_source_ids = Array(rec["tss_gene_sources"]).to_h do |x|
+        if x.start_with?("EntrezGene:")
+          [x.sub(/\AEntrezGene:/, ""), true]
+        else
+          [x, true]
+        end
+      end
       buf << "  fantao:hasPromoter ["
       buf << "    a fantao:Promoter ;"
       ncbi_ids.each do |gid|
-        buf << "    rdfs:seeAlso [ a fantao:NcbiGene ; rdfs:seeAlso ncbigene:#{esc(gid)} ; dct:identifier \"#{esc(gid)}\" ] ;"
+        src = ""
+        if gene_source_ids[gid]
+          src = " a fantao:TssGeneSource ;"
+        end
+        buf << "    rdfs:seeAlso [ a fantao:NcbiGene ;#{src} rdfs:seeAlso ncbigene:#{esc(gid)} ; dct:identifier \"#{esc(gid)}\" ] ;"
       end
       hgnc_mgi_ids.each do |rid|
+        src = ""
+        if gene_source_ids[rid]
+          src = " a fantao:TssGeneSource ;"
+        end
         if rid =~ /\AHGNC:(\d+)\z/i
-          buf << "    rdfs:seeAlso [ a fantao:Hgnc ; rdfs:seeAlso hgnc:#{$1} ; dct:identifier \"#{$1}\" ] ;"
+          buf << "    rdfs:seeAlso [ a fantao:Hgnc ;#{src} rdfs:seeAlso hgnc:#{$1} ; dct:identifier \"#{$1}\" ] ;"
         elsif rid =~ /\AMGI:(\d+)\z/i
-          buf << "    rdfs:seeAlso [ a fantao:Mgi ; rdfs:seeAlso mgi:#{$1} ; dct:identifier \"#{$1}\" ] ;"
+          buf << "    rdfs:seeAlso [ a fantao:Mgi ;#{src} rdfs:seeAlso mgi:#{$1} ; dct:identifier \"#{$1}\" ] ;"
         end
       end
       uniprot_ids.each do |uid|
@@ -151,11 +167,11 @@ module Utils
       next unless tid
       is_nearest = nearest_ids_set[tid]
       
-      buf << "  fantao:hasTssTranscript ["
+      buf << "  fantao:hasTss ["
       if is_nearest
-        buf << "    a fantao:TssTranscript, fantao:NearestTssTranscript ;"
+        buf << "    a fantao:Tss, fantao:NearestTss ;"
       else
-        buf << "    a fantao:TssTranscript ;"
+        buf << "    a fantao:Tss ;"
       end
       case id_kind(tid)
       when :ensembl
@@ -176,7 +192,7 @@ module Utils
     Array(rec["screen_ccres"]).each do |sc|
       cid, ctyp = sc["screen_ccre_id"], sc["screen_ccre_type"]
       next unless cid
-      buf << "  fantao:hasOverlappedScreenCcre ["
+      buf << "  fantao:hasOverlappedAnnotation ["
       buf << "    a fantao:ScreenCcre ;"
       buf << "    dct:identifier \"#{esc(cid)}\" ;"
       buf << "    rdfs:label \"#{esc(ctyp)}\" ;" if ctyp
@@ -188,7 +204,7 @@ module Utils
     Array(rec["fantom5_cage_peaks"]).each do |fcp|
       fid, fname = fcp["cage_peak_id"], fcp["cage_peak_name"]
       next unless fid
-      buf << "  fantao:hasOverlappedFantom5CagePeak ["
+      buf << "  fantao:hasOverlappedAnnotation ["
       buf << "    a fantao:Fantom5CagePeak ;"
       buf << "    dct:identifier \"#{esc(fid)}\" ;"
       buf << "    rdfs:label \"#{esc(fname)}\""
@@ -200,7 +216,7 @@ module Utils
       fids = fe["enhancer_id"]
       next unless fids
       fids.each do |fid|
-        buf << "  fantao:hasOverlappedFantom5Enhancer [ a fantao:Fantom5Enhancer ; dct:identifier \"#{esc(fid)}\" ] ;"
+        buf << "  fantao:hasOverlappedAnnotation [ a fantao:Fantom5Enhancer ; dct:identifier \"#{esc(fid)}\" ] ;"
       end
     end
 
@@ -209,7 +225,7 @@ module Utils
       sym = ag["antigen"]
       mx  = to_int_or_nil(ag["maxqscore"])
       exs = Array(ag["experiments"])
-      buf << "  fantao:hasOverlappedAntigen ["
+      buf << "  fantao:hasOverlappedAnnotation ["
       buf << "    a fantao:ChipAtlasAntigen ;"
       if sym && (gid = sym2gene[sym])
         buf << "    rdfs:seeAlso ncbigene:#{esc(gid)} ;"
