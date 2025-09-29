@@ -20,8 +20,6 @@ module Utils
 @prefix mgi:      <http://identifiers.org/mgi/> .
 @prefix uniprot:  <http://purl.uniprot.org/uniprot/> .
 @prefix sra:      <http://identifiers.org/insdc.sra/> .
-@prefix hco:      <http://identifiers.org/hco/> .
-@prefix mco:      <http://identifiers.org/mco/> .
 @prefix faldo:    <http://biohackathon.org/resource/faldo#> .
 @prefix tax:      <http://identifiers.org/taxonomy/> .
 @prefix sio:      <http://semanticscience.org/resource/> .
@@ -109,8 +107,8 @@ module Utils
       chr = chrom_number(chrom)
       buf << "  faldo:location ["
       buf << "    a faldo:Region ;"
-      buf << "    faldo:begin [ a faldo:ExactPosition ; faldo:position #{start_i} ; faldo:reference #{chro}:#{esc(chr)}##{asm} ] ;"
-      buf << "    faldo:end   [ a faldo:ExactPosition ; faldo:position #{end_i} ; faldo:reference #{chro}:#{esc(chr)}##{asm} ]"
+      buf << "    faldo:begin [ a faldo:ExactPosition ; faldo:position #{start_i} ; faldo:reference <http://identifiers.org/#{chro}/#{esc(chr)}/#{asm}> ] ;"
+      buf << "    faldo:end   [ a faldo:ExactPosition ; faldo:position #{end_i} ; faldo:reference  <http://identifiers.org/#{chro}/#{esc(chr)}/#{asm}> ]"
       buf << "  ] ;"
     end
 
