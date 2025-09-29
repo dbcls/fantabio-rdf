@@ -2,8 +2,6 @@
 require "json"
 
 module Utils
-  TAXON = { "human" => "9606", "mouse" => "10090" }
-  ASSEMBLY = { "human" => "GRCh38", "mouse" => "GRCm38" } # mm10
 
   # --- Prefix block ---
   def self.prefixes
@@ -72,10 +70,21 @@ module Utils
     :insdc
   end
 
-  # --- Record to Turtle ---
-  def self.record_to_ttl(rec, species, sym2gene)
-    taxid = TAXON[species]
-    asm   = ASSEMBLY[species]
+  # --- bed to Turtle ---
+  def self.bed_to_ttl(rec)
+    buf  = []
+    if rec[10] =~ /directionality:([-\d.]+)\|class:(\w+)/
+      dir = $1.to_f
+      cls = $2
+    end
+    buf << "fanta:#{esc(rec[3])} a fantao:#{esc(cls)} ;"
+    buf << "  sio:SIO_000216  [ a fantao:Directionality ; sio:SIO_000300 #{dir} ] ."
+  end
+  
+  # --- jsonl to Turtle ---
+  def self.jsonl_to_ttl(rec, species, sym2gene, config)
+    taxid = config[species]["tax"]
+    asm   = config[species]["assembly"]
 
     cre_id   = rec["cre_id"]
     cre_name = rec["cre_name"]
@@ -120,12 +129,12 @@ module Utils
           [x, true]  # HGNC:/MGI: > not mod.
         end
       end
-      buf << "  fantao:hasPromoter ["
-      buf << "    a fantao:Promoter ;"
+      buf << "  sio:SIO_000395 ["
+      buf << "    a obo:SO_0000123 ;"
       ncbi_ids.each do |gid|
         src = ""
         if gene_source_ids[gid]
-          src = " a fantao:TssGeneSource ;"
+          src = " a fantao:TSSGeneSource ;"
         end
         buf << "    rdfs:seeAlso [ a fantao:NcbiGene ;#{src} rdfs:seeAlso ncbigene:#{esc(gid)} ; dct:identifier \"#{esc(gid)}\" ] ;"
       end
@@ -153,7 +162,7 @@ module Utils
     # RefTSS
     Array(rec["reftss_tss"]).each do |rt|
       Array(rt["tss_id"]).each do |rid|
-        buf << "  fantao:hasRefTss [ a fantao:ReferenceTss ; rdfs:seeAlso reftss:#{esc(rid)} ; dct:identifier \"#{esc(rid)}\" ] ;"
+        buf << "  fantao:hasRefTSS [ a fantao:ReferenceTSS ; rdfs:seeAlso reftss:#{esc(rid)} ; dct:identifier \"#{esc(rid)}\" ] ;"
       end
     end
 
@@ -166,11 +175,11 @@ module Utils
       next unless tid
       is_nearest = nearest_ids_set[tid]
       
-      buf << "  fantao:hasTss ["
+      buf << "  fantao:hasTSS ["
       if is_nearest
-        buf << "    a fantao:Tss, fantao:NearestTss ;"
+        buf << "    a fantao:TSS, fantao:NearestTSS ;"
       else
-        buf << "    a fantao:Tss ;"
+        buf << "    a fantao:TSS ;"
       end
       case id_kind(tid)
       when :ensembl
@@ -181,7 +190,7 @@ module Utils
         buf << "    rdfs:seeAlso [ a fantao:Insdc ; rdfs:seeAlso insdc:#{esc(tid)} ; dct:identifier \"#{esc(tid)}\" ] ;"
       end
       if dist
-        buf << "    sio:SIO_000216 [ a fantao:TssDistance ; sio:SIO_000300 #{dist} ; sio:SIO_000221 obo:UO_0000244 ] ;"
+        buf << "    sio:SIO_000216 [ a fantao:TSSDistance ; sio:SIO_000300 #{dist} ; sio:SIO_000221 obo:UO_0000244 ] ;"
       end
       buf[-1] = buf.last.chomp(";")
       buf << "  ] ;"
@@ -234,8 +243,8 @@ module Utils
       exs.each do |ex|
         sid, qsc = ex["id"], to_int_or_nil(ex["qscore"])
         next unless sid
-        buf << "    fantao:experiment ["
-        buf << "      a fantao:Experiment ;"
+        buf << "    fantao:hasExperiment ["
+        buf << "      a sio:SIO_000994 ;"
         buf << "      rdfs:seeAlso sra:#{esc(sid)} ;"
         buf << "      dct:identifier \"#{esc(sid)}\" ;"
         buf << "      sio:SIO_000216 [ a fantao:Qscore ; sio:SIO_000300 #{qsc} ]" if qsc

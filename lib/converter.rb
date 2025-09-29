@@ -13,8 +13,8 @@ module Converter
     FileUtils.mkdir_p(OUTPUT_DIR)
 
     inputs = {
-      "human" => File.join(INPUT_DIR, "human_fantabio.jsonl"),
-      "mouse" => File.join(INPUT_DIR, "mouse_fantabio.jsonl")
+      "human" => File.join(INPUT_DIR, "human_fantabio"),
+      "mouse" => File.join(INPUT_DIR, "mouse_fantabio")
     }
 
     inputs.each do |species, inpath|
@@ -23,11 +23,17 @@ module Converter
 
       File.open(outpath, "w") do |out|
         out.puts Utils.prefixes
-        File.foreach(inpath, chomp: true) do |line|
+        File.foreach(inpath + ".bed", chomp: true) do |line|
+          next if line.strip.empty?
+          rec = line.split(/\t/)
+          next unless rec
+          out.puts Utils.bed_to_ttl(rec)
+        end
+        File.foreach(inpath + ".jsonl", chomp: true) do |line|
           next if line.strip.empty?
           rec = JSON.parse(line) rescue nil
           next unless rec
-          out.puts Utils.record_to_ttl(rec, species, sym2gene)
+          out.puts Utils.jsonl_to_ttl(rec, species, sym2gene, config)
         end
       end
       puts "Wrote #{outpath}"
