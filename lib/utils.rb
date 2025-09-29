@@ -21,6 +21,7 @@ module Utils
 @prefix uniprot:  <http://purl.uniprot.org/uniprot/> .
 @prefix sra:      <http://identifiers.org/insdc.sra/> .
 @prefix hco:      <http://identifiers.org/hco/> .
+@prefix mco:      <http://identifiers.org/mco/> .
 @prefix faldo:    <http://biohackathon.org/resource/faldo#> .
 @prefix tax:      <http://identifiers.org/taxonomy/> .
 @prefix sio:      <http://semanticscience.org/resource/> .
@@ -85,6 +86,7 @@ module Utils
   def self.jsonl_to_ttl(rec, species, sym2gene, config)
     taxid = config[species]["tax"]
     asm   = config[species]["assembly"]
+    chro  = config[species]["chro"]
 
     cre_id   = rec["cre_id"]
     cre_name = rec["cre_name"]
@@ -107,8 +109,8 @@ module Utils
       chr = chrom_number(chrom)
       buf << "  faldo:location ["
       buf << "    a faldo:Region ;"
-      buf << "    faldo:begin [ a faldo:ExactPosition ; faldo:position #{start_i} ; faldo:reference hco:#{esc(chr)}##{asm} ] ;"
-      buf << "    faldo:end   [ a faldo:ExactPosition ; faldo:position #{end_i} ; faldo:reference hco:#{esc(chr)}##{asm} ]"
+      buf << "    faldo:begin [ a faldo:ExactPosition ; faldo:position #{start_i} ; faldo:reference #{chro}:#{esc(chr)}##{asm} ] ;"
+      buf << "    faldo:end   [ a faldo:ExactPosition ; faldo:position #{end_i} ; faldo:reference #{chro}:#{esc(chr)}##{asm} ]"
       buf << "  ] ;"
     end
 

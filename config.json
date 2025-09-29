@@ -2,12 +2,14 @@
   "human": {
     "tax": "9606",
     "assembly": "GRCh38",
+    "chro": "hco",
     "bed": "https://data.fanta.bio/cre/v1.1.0/human/human-CREv1.1.0.hg38.cre-peaks.bed.gz",
     "jsonl": "https://data.fanta.bio/cre/v1.1.0/human/human-CREv1.1.0.hg38.cre-peaks_annotation.jsonl.gz"
   },
   "mouse": {
     "tax": "10090",
     "assembly": "GRCm38",
+    "chro": "mco",
     "bed": "https://data.fanta.bio/cre/v1.1.0/mouse/mouse-CREv1.1.0.mm10.cre-peaks.bed.gz",
     "jsonl": "https://data.fanta.bio/cre/v1.1.0/mouse/mouse-CREv1.1.0.mm10.cre-peaks_annotation.jsonl.gz"
   },
