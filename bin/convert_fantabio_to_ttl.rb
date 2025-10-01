@@ -12,9 +12,9 @@ require "converter"
 subcommand = ARGV.shift
 
 case subcommand
-when "download:jsonl"
+when "dl:fanta"
   Downloader.run
-when "download:tsv"
+when "dl:tsv"
   SparqlClient.run
 when "convert:ttl", "convert"
   Converter.run
@@ -39,10 +39,10 @@ when "run:all", "all"
 else
   puts <<~USAGE
     Usage:
-      bin/convert_fantabio_to_ttl.rb download:jsonl    # Download the fanta.bio JSONL by referencing config.json
-      bin/convert_fantabio_to_ttl.rb download:tsv      # Get geneID-symbol_TSV from RDF-portal
-      bin/convert_fantabio_to_ttl.rb convert           # JSONL & TSV to TTL
-      bin/convert_fantabio_to_ttl.rb all               # Download & convert
+      bin/convert_fantabio_to_ttl.rb dl:fanta    # Download the fanta.bio files by referencing config.json
+      bin/convert_fantabio_to_ttl.rb dl:tsv      # Get geneID-symbol_TSV from RDF-portal
+      bin/convert_fantabio_to_ttl.rb convert     # JSONL & TSV to TTL
+      bin/convert_fantabio_to_ttl.rb all         # Download & convert
   USAGE
   exit 1
 end
