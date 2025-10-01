@@ -45,8 +45,8 @@
   rdfs:label "PLA" ;
   dct:description "A CRE group with promoter level activity (PLA) in fanta.bio." .
 
-:ELP rdf:type owl:Class ;
-  rdfs:label "ELP" ;
+:ELA rdf:type owl:Class ;
+  rdfs:label "ELA" ;
   dct:description "A CRE group with enhancer level activity (ELA) in fanta.bio." .
 
 :Directionality rdf:type owl:Class ;
