@@ -1,0 +1,106 @@
+@prefix : <http://fanta.bio/ontology#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sio: <http://semanticscience.org/resource/> .
+
+#################################################################
+#    Object properties
+#################################################################
+
+:hasTSS rdf:type owl:ObjectProperty ;
+  rdfs:domain :CisRegulatoryElement ;
+  rdfs:range :TSS ;
+  rdfs:range :NearestTSS ;
+  dct:description "A property that describes the transcription start site near the cis-regulatory element." ;
+  rdfs:label "has TSS" .
+
+:hasRefTSS rdf:type owl:ObjectProperty ;
+  rdfs:domain :CisRegulatoryElement ;
+  rdfs:range :RefarenceTSS ;
+  dct:description "A property that describes RefTSS of the cis-regulatory element." ;
+  rdfs:label "has RefTSS" .
+
+:hasOverlappedAnnotation rdf:type owl:ObjectProperty ;
+  rdfs:domain :CisRegulatoryElement ;
+  rdfs:range :ScreenCcre ;
+  rdfs:range :ChipAtlasAntigen ;
+  rdfs:range :Fantom5CagePeak ;
+  rdfs:range :Fantom5Enhancer ;
+  dct:description "A property that describes annotation that is overlapped to the cis-regulatory element." ;
+  rdfs:label "has overlapped annotation" .
+
+:fantao:hasExperiment rdf:type owl:ObjectProperty ;
+  rdfs:domain :ChipAtlasAntigen ;
+  rdfs:range sio:SIO_000994 ;
+  rdfs:label "has experiment" .
+
+#################################################################
+#    Classes
+#################################################################
+
+:CisRegulatoryElement rdf:type owl:Class ;
+  rdfs:label "cis-regulatory element" .
+
+:PLA rdf:type owl:Class ;
+  rdfs:label "PLA" ;
+  dct:description "A CRE group with promoter level activity (PLA) in fanta.bio." .
+
+:ELP rdf:type owl:Class ;
+  rdfs:label "ELP" ;
+  dct:description "A CRE group with enhancer level activity (ELA) in fanta.bio." .
+
+:Directionality rdf:type owl:Class ;
+  rdfs:label "directionality" ;
+  dct:description "A measured value that is defined as frac{ (ForwardCounts) - (ReverseCounts) }{ (ForwardCounts) + (ReverseCounts) }." .
+
+:ReferenceTSS rdf:type owl:Class ;
+  rdfs:label "reference TSS" .
+
+:TSS rdf:type owl:Class ;
+  rdfs:label "transcription start site" .
+
+:NearestTSS rdf:type owl:Class ;
+  rdfs:label "nearest transcription start site" .
+
+:TSSDistance rdf:type owl:Class ;
+  rdfs:label "TSS distance" .
+  
+:NcbiGene rdf:type owl:Class ;
+  rdfs:label "NCBI gene" .
+  
+:Hgnc rdf:type owl:Class ;
+  rdfs:label "HGNC" .
+
+:Mgi rdf:type owl:Class ;
+  rdfs:label "MGI" .
+
+:UniProt rdf:type owl:Class ;
+  rdfs:label "UniProt" .
+
+:Ensembl rdf:type owl:Class ;
+  rdfs:label "Ensembl" .
+
+:RefSeq rdf:type owl:Class ;
+  rdfs:label "RefSeq" .
+
+:Insdc rdf:type owl:Class ;
+  rdfs:label "INSDC" .
+
+:ScreenCcre rdf:type owl:Class ;
+  rdfs:label "SCREEN cCRE" ;
+  dct:escription: "Candidate cis-regulatory element of SCREEN (Search Candidate Regulatory Elements by ENCODE)." .
+
+:ChipAtlasAntigen rdf:type owl:Class ;
+  rdfs:label "Chip-Atlas antigen" .
+
+:Fantom5CagePeak rdf:type owl:Class ;
+  rdfs:label "FANTOM5 cage peak" .
+  
+:Fantom5Enhancer rdf:type owl:Class ;
+  rdfs:label "FANTOM5 enhancer" .
+
+:Qscore rdf:type owl:Class ;
+  rdfs:label "qscore" .
+
+:MaxQscore rdf:type owl:Class ;
+  rdfs:label "max qscore" .
