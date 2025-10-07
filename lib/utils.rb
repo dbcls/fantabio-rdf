@@ -17,7 +17,7 @@ module Utils
 @prefix ensembl:  <http://identifiers.org/ensembl/> .
 @prefix refseq:   <http://identifiers.org/refseq/> .
 @prefix insdc:    <http://identifiers.org/insdc/> .
-@prefix mgi:      <http://identifiers.org/mgi/> .
+@prefix mgi:      <http://identifiers.org/mgi/MGI:> .
 @prefix uniprot:  <http://purl.uniprot.org/uniprot/> .
 @prefix sra:      <http://identifiers.org/insdc.sra/> .
 @prefix faldo:    <http://biohackathon.org/resource/faldo#> .
