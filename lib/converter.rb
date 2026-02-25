@@ -38,5 +38,29 @@ module Converter
       end
       puts "Wrote #{outpath}"
     end
+    write_metadata
+  end
+
+  def self.write_metadata
+    print "Version (e.g. v1.2.0): "
+    version = $stdin.gets.chomp
+    date = Time.now.strftime("%Y-%m-%d+09:00")
+    content = <<~TTL
+      @prefix dct: <http://purl.org/dc/terms/> .
+      @prefix sio: <http://semanticscience.org/resource/> .
+      @prefix pav: <http://purl.org/pav/> .
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+      @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+      @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+      <http://rdf.fanta.bio/>  rdf:type        sio:SIO_000750 ;
+                               rdfs:label      "Fanta.bio" ;
+                               dct:title       "Fanta.bio RDF" ;
+                               pav:version     "#{version}" ;
+                               dct:created     "#{date}"^^xsd:date ;
+                               dct:description "Fanta.bio RDF converted from CRE peaks annotation JSONL." .
+    TTL
+    outpath = File.join(OUTPUT_DIR, "metadata.ttl")
+    File.write(outpath, content)
+    puts "Wrote #{outpath}"
   end
 end
