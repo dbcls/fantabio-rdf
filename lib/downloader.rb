@@ -12,9 +12,9 @@ module Downloader
     FileUtils.mkdir_p(OUTPUT_DIR)
 
     config.each do |species, info|
-      next unless info.is_a?(Hash) && info["download"]
+      next unless info.is_a?(Hash) && info["bed"] && info["jsonl"]
 
-      url = info["download"]
+      url = info["bed"]
       fname = File.basename(url, ".gz")
       outpath = File.join(OUTPUT_DIR, fname)
 
@@ -22,7 +22,21 @@ module Downloader
       URI.open(url) do |remote|
         Zlib::GzipReader.wrap(remote) do |gz|
           File.open(outpath, "w") { |f| IO.copy_stream(gz, f) }
-          com = "cd files; ln -s #{fname} #{species}_fantabio.jsonl"
+          com = "cd files; ln -sf #{fname} #{species}_fantabio.bed"
+          `#{com}`          
+        end
+      end
+      puts "Saved to #{outpath}"
+
+      url = info["jsonl"]
+      fname = File.basename(url, ".gz")
+      outpath = File.join(OUTPUT_DIR, fname)
+
+      puts "[#{species}] Downloading #{url}..."
+      URI.open(url) do |remote|
+        Zlib::GzipReader.wrap(remote) do |gz|
+          File.open(outpath, "w") { |f| IO.copy_stream(gz, f) }
+          com = "cd files; ln -sf #{fname} #{species}_fantabio.jsonl"
           `#{com}`          
         end
       end
