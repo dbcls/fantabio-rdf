@@ -3,7 +3,7 @@
     "tax": "9606",
     "assembly": "GRCh38",
     "chro": "hco",
-    "bed": "https://data.fanta.bio/cre/v1.2.0/human/human-CREv1.2.0.hg38.cre-peaks.tpm.txt.gz",
+    "bed": "https://data.fanta.bio/cre/v1.2.0/human/human-CREv1.2.0.hg38.cre-peaks.bed.gz",
     "jsonl": "https://data.fanta.bio/cre/v1.2.0/human/human-CREv1.2.0.hg38.cre-peaks_annotation.jsonl.gz"
   },
   "mouse": {
